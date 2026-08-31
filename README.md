@@ -257,7 +257,6 @@ worse than no tool at all:
   yet cross-checked against the statement (see Roadmap).
 - **Operated manually.** Each case is submitted through the AI Studio
   interface; there is no automated pipeline yet.
-- **Validated on a small sample** of historical cases to date.
 - **English only** at present.
 
 ---
