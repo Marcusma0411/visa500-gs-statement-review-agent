@@ -183,8 +183,8 @@ see Prompt Architecture above for why.*
 and structure without exposing any content.*
 
 ### 2. Deterministic run settings
-![Run settings](screenshots/02-run-settings.png)
-*Temperature is set near zero and web grounding is disabled — the model must
+![Run settings](screenshots/02-Deterministic-run-settings.png)
+*Thinking level is set to low (the lowest level option in the model) and web grounding is disabled — the model must
 score from the supplied rubric alone, not from the internet.*
 
 ### 3. Review note output
