@@ -281,7 +281,7 @@ demonstration.
 
 ## Copyright
 
-© 2026 Marcusma0411. All rights reserved.
+© 2026 Marcus. All rights reserved.
 
 This repository is published for portfolio and demonstration purposes.
 The assessment framework, scoring rubric, and system design are the
@@ -292,7 +292,7 @@ redistribution, or derivative works.
 
 ## About
 
-Built by Marcusma0411. All rights reserved. — Visa & Onboarding
+Built by Marcus. All rights reserved. — Visa & Onboarding
 Consultant with 7+ years in APAC/Greater China visa compliance, now
 building AI tooling for compliance workflows.
 
