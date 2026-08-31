@@ -172,7 +172,7 @@ rubric back for revision, regardless of how accurate the scores were.**
 ## Screenshots
 
 ### 1. The constraint rules, in the running system
-![The constraint rules](screenshots/01-the-constraint-rules.png)
+![System instructions](screenshots/01-system-instructions.png)
 *Scrolled to the constraint section within the live system instruction —
 the rest of the document (assessment criteria, worked examples) is withheld;
 see Prompt Architecture above for why.*
