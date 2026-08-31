@@ -1,54 +1,54 @@
-# visa500-gs-statement-review-agent
-AI-assisted compliance review agent for Australian Visa Subclass 500's key document - Genuine Student statement 
 # GS Statement Review Agent
 
+[繁體中文](README.zh-TW.md)
+
 > AI-assisted compliance review system for Australian Student Visa (Subclass 500) Genuine Student statements.
-> 澳洲學生簽證 GS Statement 的 AI 輔助合規審查系統
 
 [![Status](https://img.shields.io/badge/status-working%20prototype-green)]()
 [![Domain](https://img.shields.io/badge/domain-immigration%20compliance-blue)]()
 
 ---
 
-## The Problem 問題背景
+## The Problem
 
 Reviewing a Genuine Student statement manually takes 30–45 minutes per case.
-The reviewer must cross-check the applicant's background form against five
-narrative answers, verify each answer stays within the 150-word government
-limit, catch spelling errors, and — most importantly — apply the assessment
-criteria **consistently** across dozens of cases.
+The reviewer must assess five narrative answers against published criteria,
+verify each answer stays within the 150-word government limit, catch spelling
+errors, and — most importantly — apply the assessment criteria
+**consistently** across dozens of cases.
 
 Consistency is the hard part. Two reviewers, or the same reviewer on a
-different day, will score the same statement differently.
-
-**人工審查一份 GS statement 需要 30-45 分鐘**,且不同審查者、甚至同一人在不同
-時間,對同一份文件的評分可能不一致。這個專案的目標不是取代人工判斷,而是
-**讓評分標準可被一致地套用**,並把明顯可自動化的檢查(字數、拼字、背景一致性)
-交給機器。
+different day, will score the same statement differently. This project's
+goal is not to replace human judgment, but to make the assessment criteria
+consistently applicable, and to hand off the checks that can genuinely be
+ruled — word count, spelling, mandatory disclosures — to a machine.
 
 ---
 
-## What It Does 目前功能
+## What It Does
 
-| Capability | Description |
-|---|---|
-| Background cross-check | Reads the applicant's background/visa information form **before** scoring, then flags logical inconsistencies between background and stated answers |
-| Structured scoring | 5 questions × 20 points, mapped to published assessment criteria |
-| Word-limit enforcement | Flags any answer exceeding the government's 150-word limit |
-| Spelling detection | Flags English spelling errors |
-| **Manual-review flagging** | Any item the rubric does not explicitly cover is escalated to a human — the system is not permitted to improvise a rule |
-| Deliverable | A Markdown review note containing the scores, the reasoning behind each deduction, and a dedicated manual-review section |
+| Capability                 | Description                                                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Structured scoring         | 5 questions × 20 points, each assessed against mandatory coverage points, common deduction scenarios, and compliant/non-compliant worked examples |
+| Weighted deductions        | Omitted coverage points deduct 5 or 10 points depending on materiality; spelling errors deduct 2 points each                                      |
+| Arithmetic verification    | Every per-question score and the total are recalculated and verified before output, without showing the working                                   |
+| Word-limit enforcement     | Flags any answer exceeding the government's 150-word limit and records the actual word count                                                      |
+| Spelling detection         | Flags and underlines English spelling errors within the applicant's own text                                                                      |
+| Conditional branching      | Question 5 applies a different standard depending on whether the applicant has a prior study record in Australia                                  |
+| **Manual-review flagging** | Any item the rubric does not explicitly cover is escalated to a human — the system is not permitted to improvise a rule                           |
+| Revision suggestions       | Each deduction is returned with rewritten wording built from the applicant's own text, never copied verbatim from the worked examples             |
+| Deliverable                | A Markdown review note: per-question deductions with cited rule IDs, a consolidated review table, the four-tier rating, and a manual-review list  |
 
-### Scoring tiers 評分分級
+### Scoring tiers
 
 | Score | Tier | Interpretation |
 |---|---|---|
-| 90+ | High | High probability of approval |
-| 75–90 | Medium | Moderate probability |
+| 90+ | High | High probability of visa grant |
+| 75–90 | Medium | Medium probability |
 | 60–75 | Low | Low probability |
 | < 60 | Very Low | Very high probability of refusal |
 
-### Why Markdown 為什麼用 Markdown 輸出
+### Why Markdown
 
 The review note is produced as Markdown so it drops straight into the
 reviewer's Obsidian vault, where the human reviewer edits, confirms, and
@@ -57,17 +57,13 @@ applicant. Keeping the intermediate format plain text means the human
 edit step leaves a readable trail, rather than the model's output going
 directly to the client.
 
-審查結果以 Markdown 輸出,可直接存進 Obsidian 由人工完成最後審閱與確認,
-再匯出 PDF 交付給客戶。中間格式維持純文字,是為了讓人工修改的痕跡清楚可見
-——模型的輸出不會直接送到客戶手上。
-
 ---
 
-## Architecture 系統架構
+## Architecture
 
 ```mermaid
 flowchart TD
-    A[GS statement + background form] --> B[System instructions:<br/>rubric + output format + guardrail]
+    A[GS statement] --> B[System instructions:<br/>rubric + rules + guardrail]
     B --> C[Gemini: structured scoring]
     C --> D[Markdown review note<br/>+ manual-review section]
     D --> E[Human review in Obsidian]
@@ -75,15 +71,12 @@ flowchart TD
 ```
 
 The system currently runs through the Google AI Studio interface. The rubric,
-output format, and constraint rules are loaded as system instructions; each
-case is submitted and returns a structured review note.
-
-目前透過 Google AI Studio 介面運行。評分細則、輸出格式與限制規則以 System
-Instructions 載入,每份案件送出後回傳結構化的審查筆記。
+scoring rules, and constraints are loaded as system instructions; each case is
+submitted and returns a structured review note.
 
 ---
 
-## Design Rationale 設計思路
+## Design Rationale
 
 A few decisions that shaped the system:
 
@@ -103,70 +96,82 @@ is not something any reviewer can guarantee. Framing output as a
 probability band keeps the tool honest about what it can and cannot
 tell the applicant.
 
+**Why every rule carries an ID.** A deduction that cannot be traced to a
+numbered rule cannot be defended to an applicant, audited later, or used
+to improve the rubric. Requiring a citation on every deduction turns a
+score into an argument.
+
 ---
 
-## Prompt Architecture 提示詞架構
+## Prompt Architecture
 
-The system instruction is a single structured document of roughly
-<X,XXX> words. Its skeleton:
+The system instruction is a single structured document of roughly 4,200
+words, containing 69 individually numbered rules. Its skeleton:
 
 ```
 【Role & Task】
-   Reviewer persona, scope, and what the output is for
+   Evaluator persona and scope
 
-【Assessment Criteria】
-   Q1–Q5, 20 points each
-   ├─ Scoring dimensions per question
-   ├─ Common deduction patterns          ← withheld
-   ├─ Worked examples: passing answers   ← withheld
-   └─ Worked examples: failing answers   ← withheld
+【Global Rules】                        apply across all questions
+   ├─ Total score calculation + mandatory re-verification
+   ├─ Manual-review note construction rules
+   ├─ General deduction rules (5 or 10 pt coverage gaps, 2 pt per spelling error)
+   └─ Question 4 special-case deduction rules
+
+【Per-Question Criteria】               Q1–Q5, 20 points each
+   ├─ Review-note construction template   structure below, content withheld
+   │    (1) original sentence  (2) points deducted
+   │    (3) omitted coverage point(s)  (4) suggested revision
+   ├─ Mandatory coverage points           withheld
+   ├─ Common deduction scenarios          withheld
+   └─ Compliant / non-compliant examples  withheld
+
+   Q5 branches on whether the applicant has a prior study record in Australia,
+   applying a different coverage standard and example set to each path.
+
+【Scoring Conversion】
+   ├─ Total score → four-tier probability rating
+   └─ 150-word cap per answer; actual count recorded when exceeded
 
 【Output Format】
-   Markdown review note template
-   ├─ Per-question score + reasoning + rule_id
-   ├─ Total score and tier
-   └─ Manual-review section
+   Markdown
 
-【Constraints】
+【Strict Constraints】
    The guardrail rules (reproduced in full below)
 ```
 
-The criteria themselves are withheld — see *Note on the Rubric*. The
-structure is shown because the way a compliance rubric is organised is
-itself a design decision worth examining; the specific thresholds are not.
-
-系統指令是一份約 <X,XXX> 字的結構化文件。上方為其骨架,標註 withheld 的
-部分為未公開的評分細則本文。呈現架構而非內容,是因為「合規評分標準該
-如何組織」本身就是一個值得討論的設計決策,具體門檻則不是。
+Items marked *withheld* exist in the working document but are not published
+here — see *Note on the Rubric*. The structure is shown because the way a
+compliance rubric is organised is itself a design decision worth examining;
+the specific thresholds and examples are not.
 
 ---
 
-## The Guardrail That Matters Most 最重要的一道防線
+## The Guardrail That Matters Most
 
 The single biggest risk in applying an LLM to compliance work is that the
 model will **invent a rule** that sounds plausible and apply it confidently.
 
-The system instruction contains an explicit constraint:
+The constraint section of the system instruction reads, in full:
 
-> All scoring must be based solely on the supplied assessment criteria.
-> You may not apply your own knowledge or experience.
-> If the criteria do not explicitly cover a situation, it must be listed
-> under the manual-review section. Do not guess.
-> Every deduction must cite the specific `rule_id` it is based on.
+> - All scoring and recommendations must be based strictly on the scoring
+>   rubric provided above.
+> - You are prohibited from using your own knowledge or experience to make
+>   extended judgments or assumptions.
+> - If the scoring rubric does not have explicit rules for a situation, it
+>   must be categorized as "manual review required." Guessing is strictly
+>   prohibited.
+> - Every point deduction must explicitly indicate which rule-id (for
+>   example: [R-Q4-11]) it is based on.
 
 This is verified adversarially: test cases are deliberately constructed to
 sit outside the rubric, and the system passes only if it escalates rather
-than improvises. **Zero tolerance — a single fabricated `rule_id` sends the
+than improvises. **Zero tolerance — a single fabricated rule ID sends the
 rubric back for revision, regardless of how accurate the scores were.**
-
-把 LLM 用在合規工作上,最大的風險是它會**編造一條聽起來很合理的規則**並自信地
-套用。因此驗收標準是:刻意設計 rubric 未涵蓋的測試案例,系統必須誠實升級為
-人工審查,而不是自行發明規則。**只要出現一次編造的 rule_id,不論分數多準,
-一律退回修改 rubric。**
 
 ---
 
-## Screenshots 操作展示
+## Screenshots
 
 ### 1. The constraint rules, in the running system
 ![System instructions](screenshots/01-system-instructions.png)
@@ -186,8 +191,8 @@ score from the supplied rubric alone, not from the internet.*
 
 ### 3. Review note output
 ![Review note](screenshots/03-review-note-output.png)
-*Scores, per-question deductions, and the reasoning behind each, returned as
-Markdown.*
+*Per-question deductions with cited rule IDs, the consolidated review table,
+and the four-tier rating, returned as Markdown.*
 
 ### 4. Manual-review escalation ⭐
 ![Manual review](screenshots/04-manual-review-flag.png)
@@ -201,7 +206,7 @@ overrides the assessment before anything reaches the applicant.*
 
 ---
 
-## Tech Stack 技術組成
+## Tech Stack
 
 | Layer | Tool | Why |
 |---|---|---|
@@ -211,11 +216,17 @@ overrides the assessment before anything reaches the applicant.*
 
 ---
 
-## Roadmap 後續規劃
+## Roadmap
 
 These are designed but not yet implemented. Listed here because the design
 decisions behind them are part of the project's reasoning, not because the
 features exist.
+
+**Background form cross-check.** Reading the applicant's background and visa
+information form *before* scoring, so the system can flag contradictions
+between what the form states and what the statement claims. The rubric
+currently assesses the statement in isolation; cross-checking is where the
+highest-value inconsistencies tend to surface.
 
 **Independent second assessment on borderline scores.** Cases landing near a
 tier boundary would be re-scored by a different model family, working from
@@ -225,22 +236,14 @@ two disagree, both would be surfaced to the human reviewer rather than
 averaged — a large gap between two independent assessments is itself a
 signal worth acting on, and averaging would hide it.
 
-**臨界分數的獨立複核。**分數落在分級邊界附近的案件,由不同模型依同一份評分
-細則重新評分,且**看不到第一次的評分結果**——若讓它看到,判斷會被錨定,獨立
-複核就失去意義。兩者不一致時完整並列呈交人工判斷,不取平均:差距大這件事
-本身就是值得注意的訊號,取平均會把它掩蓋掉。
-
 **Local orchestration.** Moving from the browser interface to a local
 pipeline that reads the knowledge base from disk, runs deterministic
 pre-checks (word count, spelling) before the model sees the text, and writes
 the review note straight into the Obsidian vault.
 
-**本機自動化。**從瀏覽器介面轉為本機流程:直接讀取知識庫、在送進模型前先跑
-確定性的前置檢查(字數、拼字),並將審查筆記直接寫入 Obsidian。
-
 ---
 
-## Current Limitations 目前限制
+## Current Limitations
 
 Stated openly, because a compliance tool that overstates its reliability is
 worse than no tool at all:
@@ -250,6 +253,8 @@ worse than no tool at all:
 - **Rubric-bound by design.** Anything outside the supplied criteria is
   escalated, not answered — this is intentional, but it means coverage is
   only as good as the rubric.
+- **Statement assessed in isolation.** The applicant's background form is not
+  yet cross-checked against the statement (see Roadmap).
 - **Operated manually.** Each case is submitted through the AI Studio
   interface; there is no automated pipeline yet.
 - **Validated on a small sample** of historical cases to date.
@@ -257,52 +262,42 @@ worse than no tool at all:
 
 ---
 
-## Note on the Rubric 關於評分細則
+## Note on the Rubric
 
 The assessment rubric is my own original work and remains in active
 commercial use. This repository presents its **structure** — the five
-assessment dimensions, the scoring bands, and the guardrail design —
-but not the detailed criteria, deduction patterns, or worked examples
-themselves.
+assessment dimensions, the rule layers, the scoring bands, and the guardrail
+design — but not the mandatory coverage points, deduction scenarios, or
+worked examples themselves.
 
 I'm happy to walk through the full design rationale in conversation.
 
-評分細則為本人原創、且仍在實際業務中使用,因此本儲存庫僅呈現其**架構**
-(五個評估維度、分數區間、防呆機制設計),不含細則本文、扣分模式或範例內容。
-細節設計思路歡迎面談時交流。
-
 ---
 
-## Privacy Note 資料使用聲明
+## Privacy Note
 
 No real applicant data appears anywhere in this repository. All screenshots
 and sample outputs use fabricated cases created specifically for
 demonstration.
 
-**本儲存庫不含任何真實申請人資料。**所有截圖與範例輸出皆使用專為展示而虛構的
-案例。
-
 ---
 
 ## Copyright
 
-© 2026 <你的名字>. All rights reserved.
+© 2026 <your name>. All rights reserved.
 
 This repository is published for portfolio and demonstration purposes.
 The assessment framework, scoring rubric, and system design are the
 original work of the author. No license is granted for reuse,
 redistribution, or derivative works.
 
-本儲存庫僅供作品展示。評分架構、評分細則與系統設計皆為作者原創,
-不授予任何重製、散布或改作之權利。
-
 ---
 
-## About 關於
+## About
 
-Built by <你的名字> — <一句話定位,例如:education & migration consultant
-with 5+ years in APAC/Greater China student visa compliance, now building
-AI tooling for compliance workflows>.
+Built by <your name> — <one-line positioning, e.g. education & migration
+consultant with 5+ years in APAC/Greater China student visa compliance, now
+building AI tooling for compliance workflows>.
 
-- LinkedIn: <你的連結>
-- Contact: <你的 email>
+- LinkedIn: <your link>
+- Contact: <your email>
