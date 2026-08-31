@@ -172,7 +172,7 @@ rubric back for revision, regardless of how accurate the scores were.**
 ## Screenshots
 
 ### 1. The constraint rules, in the running system
-![System instructions](screenshots/01-the-constraint-rules.png)
+![System instructions](screenshots/01-The-constraint-rules.png)
 *Scrolled to the constraint section within the live system instruction —
 the rest of the document (assessment criteria, worked examples) is withheld;
 see Prompt Architecture above for why.*
@@ -188,17 +188,17 @@ and structure without exposing any content.*
 score from the supplied rubric alone, not from the internet.*
 
 ### 3. Review note output
-![Review note](screenshots/03-review-note-output.png)
+![Review note](screenshots/03-Review-note-output.png)
 *Per-question deductions with cited rule IDs, the consolidated review table,
 and the four-tier rating, returned as Markdown.*
 
 ### 4. Manual-review escalation ⭐
-![Manual review](screenshots/04-manual-review-flag.png)
+![Manual review](screenshots/04-Manual-review-escalation.png)
 *Given a scenario the rubric does not cover, the system escalates instead of
 improvising a rule.*
 
 ### 5. Human review step
-![Obsidian review](screenshots/05-obsidian-review.png)
+![Obsidian review](screenshots/05-Human-review-note.png)
 *The review note lands in Obsidian, where a human reviewer confirms or
 overrides the assessment before anything reaches the applicant.*
 
