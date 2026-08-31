@@ -177,13 +177,9 @@ rubric back for revision, regardless of how accurate the scores were.**
 the rest of the document (assessment criteria, worked examples) is withheld;
 see Prompt Architecture above for why.*
 
-### 1b. Prompt structure overview (optional)
-![Prompt outline](screenshots/01b-prompt-outline.png)
-*Collapsed outline view of the system instruction in Obsidian, showing scale
-and structure without exposing any content.*
-
 ### 2. Deterministic run settings
 ![Run settings](screenshots/02-Deterministic-run-settings.png)
+
 *Thinking level is set to low (the lowest level option in the model) and web grounding is disabled — the model must
 score from the supplied rubric alone, not from the internet.*
 
@@ -191,6 +187,10 @@ score from the supplied rubric alone, not from the internet.*
 ![Review note](screenshots/03-Review-note-output.png)
 *Per-question deductions with cited rule IDs, the consolidated review table,
 and the four-tier rating, returned as Markdown.*
+
+### 3b. Detailed Review Notes with Suggested Revision
+![Suggested revision](screenshots/03b-Detailed-Review-Notes-with-Suggested-Revision.png)
+*Generates a detailed review note in ~10 seconds — including the original sentence, points deducted, and omitted mandatory coverage points — plus a "SUGGESTED REVISION," a task that typically takes a human reviewer at least 20-25 minutes.*
 
 ### 4. Manual-review escalation ⭐
 ![Manual review](screenshots/04-Manual-review-escalation.png)
