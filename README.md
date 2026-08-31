@@ -281,7 +281,7 @@ demonstration.
 
 ## Copyright
 
-© 2026 <your name>. All rights reserved.
+© 2026 <Marcus>. All rights reserved.
 
 This repository is published for portfolio and demonstration purposes.
 The assessment framework, scoring rubric, and system design are the
@@ -292,7 +292,7 @@ redistribution, or derivative works.
 
 ## About
 
-Built by <your name> — <one-line positioning, e.g. education & migration
+Built by  <Marcus>. All rights reserved.> — <one-line positioning, e.g. education & migration
 consultant with 5+ years in APAC/Greater China student visa compliance, now
 building AI tooling for compliance workflows>.
 
