@@ -281,7 +281,7 @@ demonstration.
 
 ## Copyright
 
-© 2026 <your Marcusma0411>. All rights reserved.
+© 2026 <Marcusma0411>. All rights reserved.
 
 This repository is published for portfolio and demonstration purposes.
 The assessment framework, scoring rubric, and system design are the
