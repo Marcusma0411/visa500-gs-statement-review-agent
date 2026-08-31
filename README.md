@@ -1,7 +1,5 @@
 # GS Statement Review Agent
 
-[繁體中文](README.zh-TW.md)
-
 > AI-assisted compliance review system for Australian Student Visa (Subclass 500) Genuine Student statements.
 
 [![Status](https://img.shields.io/badge/status-working%20prototype-green)]()
