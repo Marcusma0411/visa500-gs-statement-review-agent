@@ -292,9 +292,7 @@ redistribution, or derivative works.
 
 ## About
 
-Built by <your Marcusma0411>. All rights reserved.> — <one-line positioning, e.g. education & migration
-consultant with 5+ years in APAC/Greater China student visa compliance, now
-building AI tooling for compliance workflows>.
+Built by Marcusma0411. All rights reserved. — Visa & Onboarding
+Consultant with 7+ years in APAC/Greater China visa compliance, now
+building AI tooling for compliance workflows.
 
-- LinkedIn: <your link>
-- Contact: <your email>
