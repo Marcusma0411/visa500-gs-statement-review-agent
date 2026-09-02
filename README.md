@@ -9,7 +9,7 @@
 
 ## The Problem
 
-Reviewing a Genuine Student statement manually takes 45–60 minutes per case.
+Reviewing a initial Genuine Student statement manually takes 30–45 minutes per case.
 The reviewer must assess five narrative answers against published criteria,
 verify each answer stays within the 150-word government limit, catch spelling
 errors, and — most importantly — apply the assessment criteria
@@ -190,7 +190,7 @@ and the four-tier rating, returned as Markdown.*
 
 ### 3b. Detailed Review Notes with Suggested Revision
 ![Suggested revision](screenshots/03b-Detailed-Review-Notes-with-Suggested-Revision.png)
-*Generates a detailed review note in around 10 seconds — including the original sentence, points deducted, omitted mandatory coverage points, and a suggested revision — a task that would otherwise take a human reviewer at least 30 to 35 minutes. This frees the evaluator to focus on the substance of the review and its compliance judgment, rather than on manually drafting the note.*
+*Generates a detailed review note in around 10 seconds — including the original sentence, points deducted, omitted mandatory coverage points, and a suggested revision — a task that would otherwise take a human reviewer at least 30 to 45 minutes. This frees the evaluator to focus on the substance of the review and its compliance judgment, rather than on manually drafting the note.*
 
 ### 4. Manual-review escalation ⭐
 ![Manual review](screenshots/04-Manual-review-escalation.png)
